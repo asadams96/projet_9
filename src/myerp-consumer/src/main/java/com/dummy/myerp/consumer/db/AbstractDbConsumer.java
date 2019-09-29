@@ -1,7 +1,7 @@
 package com.dummy.myerp.consumer.db;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
@@ -55,6 +55,7 @@ public abstract class AbstractDbConsumer {
      */
     protected DataSource getDataSource(DataSourcesEnum pDataSourceId) {
         DataSource vRetour = this.mapDataSource.get(pDataSourceId);
+
         if (vRetour == null) {
             throw new UnsatisfiedLinkError("La DataSource suivante n'a pas été initialisée : " + pDataSourceId);
         }
@@ -68,17 +69,18 @@ public abstract class AbstractDbConsumer {
      * <p><i><b>Attention : </b>Méthode spécifique au SGBD PostgreSQL</i></p>
      *
      * @param <T> : La classe de la valeur de la séquence.
-     * @param pDataSourcesId : L'identifiant de la {@link DataSource} à utiliser
+     * @param pJdbcTemplate : Le JdbcTemplate a utiliser
      * @param pSeqName : Le nom de la séquence dont on veut récupérer la valeur
      * @param pSeqValueClass : Classe de la valeur de la séquence
      * @return la dernière valeur de la séquence
      */
-    protected <T> T queryGetSequenceValuePostgreSQL(DataSourcesEnum pDataSourcesId,
+    protected <T> T queryGetSequenceValuePostgreSQL(JdbcTemplate pJdbcTemplate,
                                                     String pSeqName, Class<T> pSeqValueClass) {
 
-        JdbcTemplate vJdbcTemplate = new JdbcTemplate(getDataSource(pDataSourcesId));
+        if(pJdbcTemplate == null) pJdbcTemplate = new JdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         String vSeqSQL = "SELECT last_value FROM " + pSeqName;
-        T vSeqValue = vJdbcTemplate.queryForObject(vSeqSQL, pSeqValueClass);
+
+        T vSeqValue = pJdbcTemplate.queryForObject(vSeqSQL, pSeqValueClass);
 
         return vSeqValue;
     }
@@ -90,13 +92,18 @@ public abstract class AbstractDbConsumer {
      *
      * @param pMapDataSource -
      */
-    public static void configure(Map<DataSourcesEnum, DataSource> pMapDataSource) {
+    public static void configure(Map<DataSourcesEnum, DataSource> pMapDataSource) throws Exception {
+
         // On pilote l'ajout avec l'Enum et on ne rajoute pas tout à l'aveuglette...
         //   ( pas de AbstractDbDao.mapDataSource.putAll(...) )
+
         Map<DataSourcesEnum, DataSource> vMapDataSource = new HashMap<>(DataSourcesEnum.values().length);
+
         DataSourcesEnum[] vDataSourceIds = DataSourcesEnum.values();
+
         for (DataSourcesEnum vDataSourceId : vDataSourceIds) {
             DataSource vDataSource = pMapDataSource.get(vDataSourceId);
+
             // On test si la DataSource est configurée
             // (NB : elle est considérée comme configurée si elle est dans pMapDataSource mais à null)
             if (vDataSource == null) {
@@ -108,5 +115,6 @@ public abstract class AbstractDbConsumer {
             }
         }
         mapDataSource = vMapDataSource;
+
     }
 }

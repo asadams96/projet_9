@@ -42,15 +42,6 @@ public abstract class AbstractBusinessManager {
 
     // ==================== Getters/Setters ====================
 
-    /**
-     * Renvoie le Proxy d'accès à la couche Business
-     *
-     * @return {@link BusinessProxy}
-     */
-    protected BusinessProxy getBusinessProxy() {
-        return businessProxy;
-    }
-
 
     /**
      * Renvoie le Proxy d'accès à la couche Consumer-DAO

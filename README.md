@@ -16,7 +16,7 @@ L'environnement de développement est assemblé grâce à _docker-compose_
 
 Il comporte :
 
-*   une base de données _PostgreSQL_ contenant un jeu de données de démo (`postgresql://127.0.0.1:9032/db_myerp`)
+*   une base de données _PostgreSQL_ contenant un jeu de données de démo (`postgresql://192.168.99.100:9032/db_myerp`)
 
 
 

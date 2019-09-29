@@ -10,14 +10,24 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  */
 public class TransactionManager {
 
+
+
     // ==================== Attributs Static ====================
+
+
+
     /** PlatformTransactionManager pour le DataSource MyERP */
     private static PlatformTransactionManager ptmMyERP;
 
 
+
     // ==================== Constructeurs ====================
+
+
     /** Instance unique de la classe (design pattern Singleton) */
     private static final TransactionManager INSTANCE = new TransactionManager();
+
+
     /**
      * Renvoie l'instance unique de la classe (design pattern Singleton).
      *
@@ -26,6 +36,8 @@ public class TransactionManager {
     public static TransactionManager getInstance() {
         return TransactionManager.INSTANCE;
     }
+
+
     /**
      * Renvoie l'instance unique de la classe (design pattern Singleton).
      *
@@ -36,12 +48,15 @@ public class TransactionManager {
         ptmMyERP = pPtmMyERP;
         return TransactionManager.INSTANCE;
     }
+
+
     /**
      * Constructeur.
      */
     protected TransactionManager() {
         super();
     }
+
 
 
     // ==================== Méthodes ====================
@@ -55,6 +70,7 @@ public class TransactionManager {
      *      </ul>
      */
     public TransactionStatus beginTransactionMyERP() {
+
         DefaultTransactionDefinition vTDef = new DefaultTransactionDefinition();
         vTDef.setName("Transaction_txManagerMyERP");
         vTDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -68,6 +84,7 @@ public class TransactionManager {
      * @param pTStatus retrouné par la méthode {@link #beginTransactionMyERP()}
      */
     public void commitMyERP(TransactionStatus pTStatus) {
+
         if (pTStatus != null) {
             ptmMyERP.commit(pTStatus);
         }
@@ -79,6 +96,7 @@ public class TransactionManager {
      * @param pTStatus retrouné par la méthode {@link #beginTransactionMyERP()}
      */
     public void rollbackMyERP(TransactionStatus pTStatus) {
+
         if (pTStatus != null) {
             ptmMyERP.rollback(pTStatus);
         }
