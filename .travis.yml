@@ -6,6 +6,7 @@ os: windows
   
 before_install:
 - choco install jdk8
+- choco install virtualbox
 - choco install docker-compose
 
 
