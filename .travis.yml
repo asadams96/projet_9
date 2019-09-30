@@ -4,6 +4,9 @@ language: java
 
 services:
   - docker
+  
+environment:
+  - MY_DOCKER_IP=192.168.99.100
     
 before_install:
     - cd docker/dev
