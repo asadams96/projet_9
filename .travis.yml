@@ -1,5 +1,6 @@
-language: shell
+sudo: required
 
+language: shell
 
 os: windows
 
@@ -7,7 +8,6 @@ os: windows
 before_install:
 - choco install jdk8
 - choco install docker-compose
-- [Environment]::SetEnvironmentVariable("DOCKER_DEFAULT_PLATFORM", "linux", "Machine")
 
 
 before_script:
