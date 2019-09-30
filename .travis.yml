@@ -7,12 +7,12 @@ os: windows
 before_install:
 - choco install jdk8
 - choco install docker-compose
+- [Environment]::SetEnvironmentVariable("DOCKER_DEFAULT_PLATFORM", "linux", "Machine")
 
 
 before_script:
 - cd "docker/dev"
-- docker-compose pull --platform linux myerp.db
-- docker-compose run -it myerp.db
+- docker-compose up -d
 
 
 script:
