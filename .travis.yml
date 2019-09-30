@@ -1,0 +1,29 @@
+language: java
+
+
+os: windows
+
+  
+before_install:
+- choco install jdk8
+- choco install docker-toolbox -ia /COMPONENTS="kitematic,virtualbox,dockercompose"
+
+
+before_script:
+- cd "docker/dev"
+- docker-compose up -d
+
+
+script:
+- mvn clean install -P test-business, test-consumer
+
+
+notifications:
+    email:
+        recipients:
+            - asadams89@gmail.com
+        on_success: always
+        on_failure: always
+
+
+
