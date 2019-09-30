@@ -11,9 +11,10 @@ environment:
 before_install:
     - cd docker/dev
     - docker-compose up -d
+    - ../../src
 
 script: 
-    - docker-compose ps
+    - mvn clean install -P test-business, test-consumer
 
 
 notifications:
