@@ -8,7 +8,6 @@ services:
 before_install:
     - cd docker/dev
     - docker-compose up -d
-    - cd ../../src
 
 script: 
     - docker-compose ps
