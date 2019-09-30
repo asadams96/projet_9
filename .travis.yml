@@ -4,6 +4,10 @@ language: shell
 
 os: windows
 
+env:
+  global:
+  - LCOW_API_PLATFORM_IF_OMITTED="linux"
+
   
 before_install:
 - choco install jdk8
