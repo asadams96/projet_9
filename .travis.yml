@@ -24,7 +24,7 @@ notifications:
         recipients:
             - asadams89@gmail.com
         on_success: always
-        on_failure: always
+        on_failure: never
 
 
 
