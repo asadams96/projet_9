@@ -6,13 +6,13 @@ os: windows
   
 before_install:
 - choco install jdk8
-- choco install virtualbox
 - choco install docker-compose
 
 
 before_script:
 - cd "docker/dev"
-- docker-compose up -d
+- docker-compose pull --platform linux myerp.db
+- docker-compose run -it myerp.db
 
 
 script:
