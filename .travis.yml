@@ -11,7 +11,7 @@ before_install:
     - cd ../../src
 
 script: 
-    - mvn clean install -P test-business,test-consumer
+    - docker-compose ps
 
 
 notifications:
