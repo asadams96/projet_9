@@ -8,7 +8,7 @@ services:
 before_install:
     - cd docker/dev
     - docker-compose up -d
-    - cd ../..
+    - cd ../../src
 
 script: 
     - mvn clean install -P test-business,test-consumer
