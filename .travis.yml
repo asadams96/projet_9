@@ -7,7 +7,7 @@ os: windows
 before_install:
 - choco install jdk8
 - choco install docker-toolbox -ia /COMPONENTS="virtualbox"
-- choco install docker-compose
+- choco install docker-compose --version=1.24.0
 
 
 before_script:
