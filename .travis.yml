@@ -1,26 +1,16 @@
 sudo: required
 
-language: shell
+language: java
 
-os: windows
-
-env:
-  global:
-  - LCOW_API_PLATFORM_IF_OMITTED="linux"
-
-  
+services:
+  - docker
+    
 before_install:
-- choco install jdk8
-- choco install docker-compose
+    - cd docker/dev
+    - docker-compose up -d
 
-
-before_script:
-- cd "docker/dev"
-- docker-compose up -d
-
-
-script:
-- mvn clean install -P test-business, test-consumer
+script: 
+    - mvn clean install -P test-business,test-consumer
 
 
 notifications:
