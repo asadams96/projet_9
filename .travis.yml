@@ -11,7 +11,7 @@ environment:
 before_install:
     - cd docker/dev
     - docker-compose up -d
-    - ../../src
+    - cd ../../src
 
 script: 
     - mvn clean install -P test-business, test-consumer
