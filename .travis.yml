@@ -6,9 +6,9 @@ services:
   - docker
   
 env:
-  - MY_DOCKER_IP=192.168.99.100
+  - MY_DOCKER_IP=127.0.0.1
     
-before_install:
+before_script:
     - cd docker/dev
     - docker-compose up -d
     - docker-compose ps
@@ -16,8 +16,7 @@ before_install:
 
 script: 
     - mvn clean install -P test-business,test-consumer
-
-
+    
 notifications:
     email:
         recipients:
