@@ -309,6 +309,7 @@
                                     </includes>
                                 </fileSet>
                             </fileSets>
+                            <destFile>${project.build.directory}/jacoco/jacoco.exec</destFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -319,6 +320,9 @@
                 <version>4.3.0</version>
                 <configuration>
                     <repoToken>ZkIJMScddxs4Ks3s3iNvWtd0v8pHQUMey</repoToken>
+                    <jacocoReports>
+                        <report>${project.build.directory}/jacoco/jacoco.exec</report>
+                    </jacocoReports>
                 </configuration>
             </plugin>
         </plugins>
