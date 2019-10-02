@@ -1,5 +1,7 @@
 # MyERP
 
+[![Coverage Status](https://coveralls.io/repos/github/asadams96/projet_9/badge.svg?branch=master)](https://coveralls.io/github/asadams96/projet_9?branch=master)
+
 ## Organisation du répertoire
 
 *   `doc` : documentation

@@ -17,6 +17,9 @@ before_script:
 script: 
     - mvn clean install -P test-business,test-consumer
     
+after_success:
+    - mvn jacoco:report coveralls:report
+    
 notifications:
     email:
         recipients:
