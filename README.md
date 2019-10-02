@@ -1,5 +1,5 @@
 # MyERP
-
+[![Build Status](https://travis-ci.com/asadams96/projet_9.svg?branch=master)](https://travis-ci.com/asadams96/projet_9)
 [![Coverage Status](https://coveralls.io/repos/github/asadams96/projet_9/badge.svg?branch=master)](https://coveralls.io/github/asadams96/projet_9?branch=master)
 
 ## Organisation du répertoire
