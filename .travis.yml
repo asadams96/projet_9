@@ -18,7 +18,7 @@ script:
     - mvn clean install -P test-business,test-consumer
     
 after_success:
-    - mvn jacoco:report coveralls:report
+    - mvn coveralls:report
     
 notifications:
     email:
