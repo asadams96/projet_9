@@ -173,7 +173,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         }
 
 
-        // TODO ===== RG_Compta_5 : Format et contenu de la référence ==> A FAIRE VALIDER
         // RG_Compta_5 : Format et contenu de la référence
         // Vérifier que l'année dans la référence correspond bien à l'année dans la date de l'écriture, idem pour le code journal...
         if (pEcritureComptable.getReference() != null) {
