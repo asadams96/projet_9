@@ -15,12 +15,8 @@
         <constructor-arg ref="DaoProxy"/>
         <constructor-arg ref="TransactionManager"/>
     </bean>
-
-
-    <!-- ========== Transaction Managers ========== -->
+    <!-- Transaction Managers -->
     <import resource="classpath:com/dummy/myerp/business/transactionContext.xml"/>
-
-
 
     <!-- ====================   Consumer   ==================== -->
     <!-- AbstractDbConsumer -->
@@ -38,8 +34,6 @@
         </property>
     </bean>
 
-
-    <!-- ==================== Consumer-Proxy ==================== -->
     <!-- ConsumerHelper -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.dummy.myerp.consumer.ConsumerHelper"/>
@@ -51,12 +45,10 @@
         </property>
     </bean>
 
-
     <!-- DaoProxy -->
     <bean id="DaoProxy" class="com.dummy.myerp.consumer.dao.impl.DaoProxyImpl" factory-method="getInstance">
         <property name="comptabiliteDao" ref="ComptabiliteDaoImpl"/>
     </bean>
-
 
     <!-- ==================== Databases ==================== -->
     <bean id="dataSourceMYERP" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -64,11 +56,9 @@
       <property name="url" value="jdbc:postgresql://#{systemEnvironment['MY_DOCKER_IP']}:9032/db_myerp" />
       <property name="username" value="usr_myerp" />
       <property name="password" value="myerp" />
-  </bean>
+    </bean>
 
-
-  <!-- ========== SQL ========== -->
+    <!-- ========== SQL ========== -->
     <import resource="classpath:com/dummy/myerp/consumer/sqlContext.xml"/>
-
 
 </beans>

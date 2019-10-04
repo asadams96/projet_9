@@ -67,48 +67,40 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      */
     @Override
     public synchronized void addReference(EcritureComptable pEcritureComptable) throws FunctionalException {
-
-        // ***************************************************** 1. Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture
-        //                                                          (table sequence_ecriture_comptable)
+        //  1. Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture (table sequence_ecriture_comptable)
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(pEcritureComptable.getDate());
-
         Integer lastSequence;
         try {
-            SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptable(calendar.get(Calendar.YEAR), pEcritureComptable.getJournal().getCode());
+            SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptable(
+                                                                            calendar.get(Calendar.YEAR), pEcritureComptable.getJournal().getCode());
             lastSequence = sequenceEcritureComptable.getDerniereValeur();
         } catch (NotFoundException e) {
             lastSequence = null;
         }
-
-        // ********************************************************  2. S'il n'y a aucun enregistrement pour le journal pour l'année concernée :
-        //                                                                  -  Utiliser le numéro 1.
-        //                                                              Sinon :
-        //                                                                  - Utiliser la dernière valeur + 1
-        // ******************************************************** 3. Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
-        // ******************************************************** 4. Enregistrer (insert/update) la valeur de la séquence en persitance
-        //                                                            (table sequence_ecriture_comptable)
+        //  2. S'il n'y a aucun enregistrement pour le journal pour l'année concernée : -  Utiliser le numéro 1. | Sinon :  - Utiliser la dernière valeur + 1
+        //  3. Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
+        //  4. Enregistrer (insert/update) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
         String reference;
         if(lastSequence == null)  {
             pEcritureComptable.setReference( pEcritureComptable.getJournal().getCode() + "-" + calendar.get(Calendar.YEAR) + "/00001" );
            this.insertSequenceEcritureComptable(new SequenceEcritureComptable(calendar.get(Calendar.YEAR), 1), pEcritureComptable.getJournal().getCode());
         }
         else {
-
             int count = 0;
             for( int i = 0; i < formatsReferenceTab[0].length(); i++) {
                 if(formatsReferenceTab[0].substring(i, i+1).equals("S"))  count++;
             }
-
-            String newSequence = String.valueOf(lastSequence+1);
+            StringBuilder newSequence = new StringBuilder(String.valueOf(lastSequence + 1));
             if(newSequence.length() > count) throw new FunctionalException("Le nombre de caractères de la nouvelle séquence '"+ newSequence
                                                         +"' est supérieur aux formats de séquence (S) imposé '"+ Arrays.toString(formatsReferenceTab) +"'.");
 
             for (int i = newSequence.length(); i < count; i++) {
-                newSequence = "0"+ newSequence;
+                newSequence.insert(0, "0");
             }
             pEcritureComptable.setReference( pEcritureComptable.getJournal().getCode() + "-" + calendar.get(Calendar.YEAR) + "/" +newSequence );
-            this.updateSequenceEcritureComptable(new SequenceEcritureComptable(calendar.get(Calendar.YEAR), lastSequence+1), pEcritureComptable.getJournal().getCode());
+            this.updateSequenceEcritureComptable(new SequenceEcritureComptable(
+                                                calendar.get(Calendar.YEAR), lastSequence+1), pEcritureComptable.getJournal().getCode());
         }
 
     }
@@ -173,35 +165,32 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         }
 
 
-        // RG_Compta_5 : Format et contenu de la référence
-        // Vérifier que l'année dans la référence correspond bien à l'année dans la date de l'écriture, idem pour le code journal...
+        // RG_Compta_5 : Vérifier que l'année dans la référence correspond à l'année  de l'écriture, idem pour le code journal.
         if (pEcritureComptable.getReference() != null) {
-
+            // Définitiuon du format de la référence
             String formatReference = null;
-            for (String format : Arrays.asList(formatsReferenceTab)) {
+            for (String format : formatsReferenceTab) {
                 if (format.length() == pEcritureComptable.getReference().length()) formatReference = format;
             }
-
-            String annee = "";
-            String code = "";
+            if(formatReference == null) throw new FunctionalException("Format de la référence inconnu");
+            // Récupération du code et de l'année dans la référence à partir du format
+            StringBuilder annee = new StringBuilder();
+            StringBuilder code = new StringBuilder();
             for (int i = 0; i < formatReference.length(); i++) {
                 if (formatReference.substring(i, i + 1).equals("C"))
-                    code = code + pEcritureComptable.getReference().substring(i, i + 1);
+                    code.append(pEcritureComptable.getReference().substring(i, i + 1));
                 else if (formatReference.substring(i, i + 1).equals("A"))
-                    annee = annee + pEcritureComptable.getReference().substring(i, i + 1);
-                ;
+                    annee.append(pEcritureComptable.getReference().substring(i, i + 1));
             }
-
-
+            // Vérification des correspondances (année + code)
             Calendar calendar = new GregorianCalendar();
             calendar.setTime(pEcritureComptable.getDate());
-            if (calendar.get(Calendar.YEAR) != Integer.valueOf(annee))
-                throw new FunctionalException("L'année de l'écriture '" + calendar.get(Calendar.YEAR) + "' ne correspond pas avec l'année dans la réference '" + annee + "'.");
-
-
-            if (!pEcritureComptable.getJournal().getCode().equals(code))
+            if (calendar.get(Calendar.YEAR) != Integer.parseInt(annee.toString()))
+                throw new FunctionalException("L'année de l'écriture '" + calendar.get(Calendar.YEAR)
+                                                    + "' ne correspond pas avec l'année dans la réference '" + annee + "'.");
+            if (!pEcritureComptable.getJournal().getCode().equals(code.toString()))
                 throw new FunctionalException("Le code du journal de l'écriture '" + pEcritureComptable.getJournal().getCode()
-                        + "' ne correspond pas avec le code dans la réference '" + code + "'.");
+                                                    + "' ne correspond pas avec le code dans la réference '" + code + "'.");
         }
     }
 
@@ -283,7 +272,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     }
 
 
-    public void insertSequenceEcritureComptable(SequenceEcritureComptable sequenceEcritureComptable, String codeJournal) throws FunctionalException {
+    private void insertSequenceEcritureComptable(SequenceEcritureComptable sequenceEcritureComptable, String codeJournal) throws FunctionalException {
 
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
@@ -296,7 +285,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     }
 
 
-    public void updateSequenceEcritureComptable(SequenceEcritureComptable sequenceEcritureComptable, String codeJournal) throws FunctionalException {
+    private void updateSequenceEcritureComptable(SequenceEcritureComptable sequenceEcritureComptable, String codeJournal) throws FunctionalException {
 
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {

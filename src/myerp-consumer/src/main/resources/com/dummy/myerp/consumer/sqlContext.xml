@@ -96,15 +96,8 @@
         </property>
         <property name="SQLinsertSequenceEcritureComptable">
             <value>
-                INSERT INTO myerp.sequence_ecriture_comptable (
-                annee,
-                journal_code,
-                derniere_valeur
-                ) VALUES (
-                :annee,
-                :journal_code,
-                :derniere_valeur
-                )
+                INSERT INTO myerp.sequence_ecriture_comptable (annee, journal_code, derniere_valeur)
+                VALUES ( :annee, :journal_code, :derniere_valeur)
             </value>
         </property>
         <property name="SQLupdateSequenceEcritureComptable">

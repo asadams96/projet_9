@@ -406,7 +406,6 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
 
     @Override
     public SequenceEcritureComptable getSequenceEcritureComptable(Integer annee, String journalCode) throws NotFoundException {
-
         NamedParameterJdbcTemplate vJdbcTemplate = vNamedParameterJdbcTemplate;
         if(vJdbcTemplate == null) vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
 
@@ -419,13 +418,10 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
             vBean = vJdbcTemplate.queryForObject(SQLgetSequenceEcritureComptable, vSqlParams, new SequenceEcritureComptableRM());
 
         } catch (EmptyResultDataAccessException vEx) {
-
             String exceptionMsg = "SequenceEcritureComptable non trouvée : année=" +annee+ " | journal_code : "+journalCode;
             LOGGER.error(vEx.toString() + " | " + exceptionMsg);
-
             throw new NotFoundException(exceptionMsg);
         }
-
         return vBean;
     }
 
